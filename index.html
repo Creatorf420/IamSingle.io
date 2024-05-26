@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I AM SINGLE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e5ddd5;
+        }
+        #startMenu {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        #startMenu input[type="password"] {
+            margin-bottom: 10px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .enter {
+            background-color: green;
+            color: white;
+        }
+        #customizationContainer {
+            display: none; /* Hide customization container by default */
+        }
+        .chat-container {
+            width: 800px; /* Fixed width */
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none; /* Initially hidden */
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #075e54;
+            color: white;
+        }
+        .header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .header .bio {
+            flex-grow: 1;
+        }
+        .header .bio h2 {
+            margin: 0;
+            font-size: 16px;
+        }
+        .header .bio p {
+            margin: 0;
+            font-size: 12px;
+        }
+        .chat-box {
+            height: 600px; /* Fixed height */
+            overflow-y: scroll;
+            padding: 10px;
+            background-color: #ece5dd;
+        }
+        .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 10px;
+            position: relative;
+            word-wrap: break-word;
+            max-width: 40%;
+            overflow-wrap: break-word;
+            word-break: break-all;
+        }
+        .message.left {
+            padding-right: 60px;
+            background-color: #fff;
+            align-self: flex-start;
+            margin-right: auto;
+            margin-left: 10px;
+        }
+        .message.right {
+            padding-left: 10px;
+            background-color: #dcf8c6;
+            align-self: flex-end;
+            margin-left: auto;
+            margin-right: 10px;
+        }
+        .message p {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .message .timestamp, .message .status {
+            font-size: 12px;
+            color: #999;
+            position: absolute;
+            bottom: -18px;
+            right: 5px;
+        }
+        .message .status {
+            bottom: -35px;
+            right: 5px;
+        }
+        .avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            position: absolute;
+            bottom: -40px;
+            left: 5px;
+        }
+        .avatar {
+    margin-right: 10px; /* Add margin to the right of the avatar for all messages */
+    margin-left: 10px; /* Add margin to the left of the avatar for all messages */
+}
+
+.message.left .avatar {
+    margin-right: 20px; /* Increase the margin to the right of the avatar for left messages */
+}
+
+.message.right .avatar {
+    margin-left: 20px; /* Increase the margin to the left of the avatar for right messages */
+}
+
+        .input-box {
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid #ccc;
+            background-color: #fff;
+        }
+        .input-box input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+            font-size: 16px;
+        }
+        .input-box button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            outline: none;
+            background-color: #25D366;
+            color: #fff;
+            font-size: 16px;
+            margin-left: 10px;
+            transition: background-color 0.3s ease;
+        }
+        .input-box button:hover {
+            background-color: #128C7E;
+        }
+        .input-box .emoji-picker {
+            position: absolute;
+            bottom: 60px;
+            left: 10px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            display: none;
+            padding: 10px;
+        }
+        .emoji-picker span {
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+        }
+        .online-status {
+            text-align: right;
+            padding: 10px;
+            font-size: 14px;
+            color: #25D366;
+        }
+        .customization-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .customization-container h2 {
+            margin-top: 0;
+        }
+        .customization-container label {
+            display: block;
+            margin-top: 10px;
+        }
+        .customization-container input[type="text"], 
+        .customization-container input[type="number"],
+        .customization-container input[type="file"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .customization-container button {
+            margin-top: 20px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            outline: none;
+            background-color: #075e54;
+            color: #fff;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .customization-container button:hover {
+            background-color: #128C7E;
+        }
+    </style>
+</head>
+<body>
+
+<div id="startMenu">
+    <h2>I AM SINGLE</h2>
+    <input type="password" id="passwordInput" placeholder="Enter password">
+    <button onclick="showCustomizationMenu()" class="enter">Enter</button>
+</div>
+
+<div class="customization-container" id="customizationContainer">
+    <h2>Customize Chat Personas</h2>
+    <h3>Persona 1 Details</h3>
+    <label for="persona1Name">Name:</label>
+    <input type="text" id="persona1Name">
+    <label for="persona1Age">Age:</label>
+    <input type="number" id="persona1Age">
+    <label for="persona1Occupation">Occupation:</label>
+    <input type="text" id="persona1Occupation">
+    <label for="persona1Location">Location:</label>
+    <input type="text" id="persona1Location">
+    <label for="persona1Photo">Upload Photo:</label>
+    <input type="file" id="persona1Photo" accept="image/*">
+    
+    <h3>Persona 2 Details</h3>
+    <label for="persona2Name">Name:</label>
+    <input type="text" id="persona2Name">
+    <label for="persona2Age">Age:</label>
+    <input type="number" id="persona2Age">
+    <label for="persona2Occupation">Occupation:</label>
+    <input type="text" id="persona2Occupation">
+    <label for="persona2Location">Location:</label>
+    <input type="text" id="persona2Location">
+    <label for="persona2Photo">Upload Photo:</label>
+    <input type="file" id="persona2Photo" accept="image/*">
+    
+    <button onclick="startChat()">Start Chat</button>
+</div>
+
+<div class="chat-container" id="chatContainer">
+    <div class="header">
+        <img id="userImage" src="" alt="User Image">
+        <div class="bio">
+            <h2 id="persona1NameDisplay"></h2>
+            <p id="persona1DetailsDisplay"></p>
+        </div>
+    </div>
+    <div class="online-status" id="onlineStatus">Online</div>
+    <div class="chat-box" id="chatBox"></div>
+    <div class="input-box">
+        <input type="text" id="messageInput" placeholder="Type a message..." onkeydown="if (event.keyCode === 13) sendMessage('right')">
+        <button onclick="sendMessage('right')"><i class="fas fa-paper-plane"></i></button>
+        <button onclick="showLeftMessages()"><i class="fas fa-arrow-left"></i></button>
+        <div class="emoji-picker" id="emojiPicker">
+            <span onclick="addEmoji('😊')">😊</span>
+            <span onclick="addEmoji('😂')">😂</span>
+            <span onclick="addEmoji('❤️')">❤️</span>
+            <span onclick="addEmoji('👍')">👍</span>
+            <span onclick="addEmoji('😢')">😢</span>
+        </div>
+        <button onclick="toggleEmojiPicker()">😊</button>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+
+<script>// Function to show the customization menu if the correct password is entered
+    function showCustomizationMenu() {
+        var password = document.getElementById("passwordInput").value;
+        // Check if the entered password is correct
+        if (password === "14414") {
+            document.getElementById("startMenu").style.display = "none"; // Hide the start menu
+            document.getElementById("customizationContainer").style.display = "block"; // Show the customization menu
+        } else {
+            alert("Incorrect password. Please try again."); // Show alert for incorrect password
+        }
+    }
+    
+    let typingTimeout;
+
+    function startChat() {
+        const persona1Name = document.getElementById('persona1Name').value;
+        const persona1Age = document.getElementById('persona1Age').value;
+        const persona1Occupation = document.getElementById('persona1Occupation').value;
+        const persona1Location = document.getElementById('persona1Location').value;
+
+        const persona2Name = document.getElementById('persona2Name').value;
+        const persona2Age = document.getElementById('persona2Age').value;
+        const persona2Occupation = document.getElementById('persona2Occupation').value;
+        const persona2Location = document.getElementById('persona2Location').value;
+
+        document.getElementById('persona1NameDisplay').textContent = persona1Name;
+        document.getElementById('persona1DetailsDisplay').textContent = `Age: ${persona1Age}, Occupation: ${persona1Occupation}, Location: ${persona1Location}`;
+        document.getElementById('userImage').src = document.getElementById('persona1Photo').files[0] ? URL.createObjectURL(document.getElementById('persona1Photo').files[0]) : ''; // Set user image
+
+        // Hide customization container and show chat container
+        document.getElementById('customizationContainer').style.display = 'none';
+        document.getElementById('chatContainer').style.display = 'block';
+    }
+
+function sendMessage(side) {
+    var messageInput = document.getElementById("messageInput").value;
+    if (messageInput.trim() === "") return;
+
+    var chatBox = document.getElementById("chatBox");
+    var message = document.createElement("div");
+    message.className = "message";
+    message.classList.add(side === 'left' ? 'left' : 'right');
+    var messageText = document.createElement("p");
+    messageText.textContent = messageInput;
+    message.appendChild(messageText);
+
+    // Add timestamp
+    var timestamp = document.createElement("span");
+    timestamp.className = "timestamp";
+    var now = new Date();
+    var hours = now.getHours();
+    var minutes = now.getMinutes();
+    var timeString = hours + ":" + (minutes < 10 ? '0' : '') + minutes;
+    timestamp.textContent = timeString;
+    message.appendChild(timestamp);
+
+    // Add avatar photo
+    if (side === 'left') {
+        var avatar = document.createElement("img");
+        avatar.src = document.getElementById('persona1Photo').files[0] ? URL.createObjectURL(document.getElementById('persona1Photo').files[0]) : ''; // Get persona 1 photo if uploaded
+        avatar.className = "avatar";
+        message.appendChild(avatar);
+    } else {
+        var avatar = document.createElement("img");
+        avatar.src = document.getElementById('persona2Photo').files[0] ? URL.createObjectURL(document.getElementById('persona2Photo').files[0]) : ''; // Get persona 2 photo if uploaded
+        avatar.className = "avatar";
+        message.appendChild(avatar);
+    }
+
+    chatBox.appendChild(message);
+
+    // Clear input after sending message
+    document.getElementById("messageInput").value = "";
+
+    // Scroll chat box to bottom
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    // Simulate typing indicator and reply from the other user
+    if (side === 'right') {
+        simulateTyping();
+    }
+}
+
+
+  function showLeftMessages() {
+    var messageInput = document.getElementById("messageInput").value.trim();
+    if (messageInput === "") return; // Don't add empty messages
+
+    var chatBox = document.getElementById("chatBox");
+    var message = document.createElement("div");
+    message.className = "message left";
+    var messageText = document.createElement("p");
+    messageText.textContent = messageInput;
+    message.appendChild(messageText);
+    var timestamp = document.createElement("span");
+    timestamp.className = "timestamp";
+    var now = new Date();
+    var hours = now.getHours();
+    var minutes = now.getMinutes();
+    var timeString = hours + ":" + (minutes < 10 ? '0' : '') + minutes;
+    timestamp.textContent = timeString;
+    message.appendChild(timestamp);
+    
+    // Add avatar photo
+    var avatar = document.createElement("img");
+    avatar.src = document.getElementById('persona1Photo').files[0] ? URL.createObjectURL(document.getElementById('persona1Photo').files[0]) : ''; // Get persona 1 photo if uploaded
+    avatar.className = "avatar";
+    message.appendChild(avatar);
+
+    chatBox.appendChild(message);
+
+    // Clear input after showing message
+    document.getElementById("messageInput").value = "";
+
+    // Scroll chat box to bottom
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+    function simulateTyping() {
+        var onlineStatus = document.getElementById("onlineStatus");
+        onlineStatus.textContent = "Typing...";
+        clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(() => {
+            onlineStatus.textContent = "Online";
+            sendMessage('left');
+        }, 2000);
+    }
+
+    function addEmoji(emoji) {
+        var messageInput = document.getElementById("messageInput");
+        messageInput.value += emoji;
+        messageInput.focus();
+    }
+
+    function toggleEmojiPicker() {
+        var emojiPicker = document.getElementById("emojiPicker");
+        emojiPicker.style.display = emojiPicker.style.display === 'block' ? 'none' : 'block';
+    }
+</script>
+
+</body>
+</html>
